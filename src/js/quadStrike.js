@@ -1,8 +1,10 @@
 import Ship from './util/ship';
 import UI from './util/uI'
 import Projectile from './util/projectile'
+import EnemySpawner from './util/spawnEnemy'
 import { displayModel, clearModel, gameOverModel, refresh} from './util/model.js'
 
+let enemySpawner = null;
 let modelcleared = false;
 let ships = [];
 let entities = [];
@@ -15,6 +17,7 @@ let colors = ["#4deeea", "#74ee15", "#ffe700", "#f000ff"]
 
 window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById("myCanvas");
+    enemySpawner = new EnemySpawner(canvas, colors)
     displayModel();
     mouseLocation(canvas);
     addArrowKeyListener();
@@ -100,7 +103,10 @@ const addArrowKeyListener = () => {
                 fire(ships[rail], dir);
                 break;
             case 81:
-                if (modelcleared == false){clearModel();}
+                if (modelcleared == false){clearModel(); modelcleared = true;}
+                break;
+            case 82:
+                spawnEnemies(3)
                 break;
         }
     });
@@ -123,4 +129,10 @@ const increaseScore = (points) =>{
 const DecreaseHealth = (ammount) =>{
     health -= ammount 
     ui.health = health;
+}
+
+const spawnEnemies = (ammount) =>{
+    enemySpawner.spawn(ammount).forEach(enemy => {
+        entities.push(enemy)
+    });
 }

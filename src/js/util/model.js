@@ -12,7 +12,7 @@ export const displayModel = ()=>{
     let instructions = document.createElement("p");
     instructions.style.color = "white";
     instructions.style.textShadow = "1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue";
-    instructions.style.fontSize = "40px"
+    instructions.style.fontSize = "30px"
     instructions.style.textAlign = "center"
     instructions.style.verticalAlign = "middle"
     instructions.style.width = "500px"
