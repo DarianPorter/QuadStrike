@@ -9,6 +9,8 @@ export default class UI{
         ctx.font = "30px Comic Sans MS";
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "red"
         ctx.fillText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 1.75);
         ctx.fillText("-----------------------------", this.canvas.width / 2, this.canvas.height / 2);
         ctx.fillText(`Health: %${this.health}`, this.canvas.width / 2, this.canvas.height / 2.25);

@@ -14,17 +14,23 @@ let score = 0;
 let ui = null;
 let dir = "down"
 let colors = ["#4deeea", "#74ee15", "#ffe700", "#f000ff"]
+let spawned = false;
 
 window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById("myCanvas");
     enemySpawner = new EnemySpawner(canvas, colors)
     displayModel();
     mouseLocation(canvas);
+    setIntervalCreator();
     addArrowKeyListener();
     addClickListner();
     setUI(canvas);
-    setIntervalCreator(canvas)
+    window.requestAnimationFrame(animate);
+    
 })
+if(spawned == false && modelcleared == true){
+    spawnEnemies(2);
+}
 const mouseLocation = (canvas) => {
     init(canvas);
     canvas.addEventListener("mousemove", (e) => {
@@ -65,16 +71,17 @@ const fire = (ship, dir) =>{
     let projectile =  new Projectile(ship, dir, canvas);
     entities.push(projectile);
 }
+const setIntervalCreator = ()=>{
+    setInterval(spawnEnemies, 2500)
+}
 
-const setIntervalCreator = (canvas)=>{
-    setInterval(
-        ()=>{
-            canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
-            for (let i = 0; i < entities.length; i++){
-                entities[i].draw()
-            }
-        }, 10
-    );
+const animate = () =>{
+    var canvas = document.getElementById("myCanvas");
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
+    for(let i = 0; i < entities.length; i++){
+        entities[i].draw()
+    }
+    requestAnimationFrame(animate)
 }
 const addArrowKeyListener = () => {
     document.addEventListener("keyup", (event) => {
@@ -103,10 +110,11 @@ const addArrowKeyListener = () => {
                 fire(ships[rail], dir);
                 break;
             case 81:
-                if (modelcleared == false){clearModel(); modelcleared = true;}
-                break;
-            case 82:
-                spawnEnemies(3)
+                if (modelcleared == false) { 
+                     clearModel();
+                     modelcleared = true; 
+                     spawned = true;
+                }
                 break;
         }
     });
@@ -131,7 +139,7 @@ const DecreaseHealth = (ammount) =>{
     ui.health = health;
 }
 
-const spawnEnemies = (ammount) =>{
+const spawnEnemies = (ammount = 1) =>{
     enemySpawner.spawn(ammount).forEach(enemy => {
         entities.push(enemy)
     });

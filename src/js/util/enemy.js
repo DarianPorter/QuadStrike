@@ -9,6 +9,7 @@ export default class Enemy {
         this.moveDir = 0;//Math.round(Math.random() * 4)
         this.change = Math.random() >= 0.5;
         this.vel = Math.floor(Math.random() * 2)
+        this.draw = this.draw.bind(this)
     }
 
     draw(){
@@ -18,15 +19,17 @@ export default class Enemy {
         }else{
             this.ctx.arc(this.pos.x, this.pos.y , this.size, 0, 2 * Math.PI);
         }
+        this.ctx.shadowColor = this.color;
+        this.ctx.shadowBlur = 15;
         this.ctx.fillStyle = this.color
         this.ctx.fill();
         this.ctx.stroke();
         this.ctx.closePath();
         this.move();
+        this.ctx.shadowBlur = 0;
     }
 
     move(){
-        console.log(this.bounds.minW, this.bounds.maxW, this.pos.x)
         switch(this.moveDir){
             case 0:
                 if(this.pos.x >= this.bounds.minW && this.change == false){
