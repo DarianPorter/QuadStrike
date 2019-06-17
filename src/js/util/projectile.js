@@ -7,24 +7,29 @@ export default class Projectile{
         this.size = 10;
         this.color = ship.color;
         this.additive = Math.random() * 1.5;
+        this.dontDraw = false;
+        this.type = "playerProjectile"
     }
 
     draw(){
-        let direction = this.movePos();
-        this.ctx.beginPath();
-        this.ctx.arc(
-            direction.x + (50 / 2) ,
-            direction.y + (50 / 2) ,
-            this.size,
-            0,
-            2 * Math.PI
-        );
-        this.ctx.shadowBlur = 20;
-        this.ctx.shadowColor = this.color;
-        this.ctx.fillStyle = this.color;
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.pos = direction;
+        if (this.dontDraw == false){
+            let direction = this.movePos();
+            this.ctx.beginPath();
+            this.ctx.arc(
+                direction.x + (50 / 2) ,
+                direction.y + (50 / 2) ,
+                this.size,
+                0,
+                2 * Math.PI
+            );
+            this.ctx.shadowBlur = 20;
+            this.ctx.shadowColor = this.color;
+            this.ctx.fillStyle = this.color;
+            this.ctx.fill();
+            this.ctx.closePath();
+            this.pos = direction;
+        }
+        this.checkDelete()
     }
 
     movePos(){
@@ -52,6 +57,17 @@ export default class Projectile{
             default:
                 console.log("whahatttt tfff")
                 debugger
+        }
+    }
+    checkDelete(){
+        if(this.pos.x > this.canvas.width){
+            this.dontDraw = true
+        }else if (this.pos.y > this.canvas.height){
+            this.dontDraw = true
+        }else if (this.pos.x < 0){
+            this.dontDraw = true
+        } else if (this.pos.y < 0){
+            this.dontDraw = true
         }
     }
 }

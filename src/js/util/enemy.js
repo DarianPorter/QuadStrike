@@ -10,23 +10,27 @@ export default class Enemy {
         this.change = Math.random() >= 0.5;
         this.vel = Math.floor(Math.random() * 2)
         this.draw = this.draw.bind(this)
+        this.type = "enemy"
+        this.dontDraw = false;
     }
 
     draw(){
-        this.ctx.beginPath();
-        if (this.size < 25){
-            this.ctx.arc(this.pos.x, this.pos.y , this.size += 1, 0, 2 * Math.PI);
-        }else{
-            this.ctx.arc(this.pos.x, this.pos.y , this.size, 0, 2 * Math.PI);
+        if (this.dontDraw == false){
+            this.ctx.beginPath();
+            if (this.size < 25){
+                this.ctx.arc(this.pos.x, this.pos.y , this.size += 1, 0, 2 * Math.PI);
+            }else{
+                this.ctx.arc(this.pos.x, this.pos.y , this.size, 0, 2 * Math.PI);
+            }
+            this.ctx.shadowColor = this.color;
+            this.ctx.shadowBlur = 15;
+            this.ctx.fillStyle = this.color
+            this.ctx.fill();
+            this.ctx.stroke();
+            this.ctx.closePath();
+            this.move();
+            this.ctx.shadowBlur = 0;
         }
-        this.ctx.shadowColor = this.color;
-        this.ctx.shadowBlur = 15;
-        this.ctx.fillStyle = this.color
-        this.ctx.fill();
-        this.ctx.stroke();
-        this.ctx.closePath();
-        this.move();
-        this.ctx.shadowBlur = 0;
     }
 
     move(){

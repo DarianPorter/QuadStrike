@@ -1,7 +1,6 @@
 export default class Ship{
     constructor(pos,axis,canvas, buffer, color){
         this.pos = pos;
-        this.oldPos = null;
         this.selected = false;
         this.axis = axis 
         this.canvas = canvas
@@ -9,6 +8,7 @@ export default class Ship{
         this.size = buffer;
         this.color = color;
         this.draw = this.draw.bind(this)
+        this.type = "ship";
     }
 
     draw(){
@@ -21,5 +21,4 @@ export default class Ship{
         this.ctx.closePath();
         this.ctx.shadowBlur = 0;
     }
-
 }

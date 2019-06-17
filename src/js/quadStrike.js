@@ -2,6 +2,9 @@ import Ship from './util/ship';
 import UI from './util/uI'
 import Projectile from './util/projectile'
 import EnemySpawner from './util/spawnEnemy'
+// import collsion from './util/collsion'
+// import {addClickListner} from './util/listners'
+// import { addArrowKeyListener, mouseLocation } from './util/eventUtil'
 import { displayModel, clearModel, gameOverModel, refresh} from './util/model.js'
 
 let enemySpawner = null;
@@ -18,13 +21,15 @@ let spawned = false;
 
 window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById("myCanvas");
+    init(canvas)
     enemySpawner = new EnemySpawner(canvas, colors)
     displayModel();
-    mouseLocation(canvas);
     setIntervalCreator();
-    addArrowKeyListener();
-    addClickListner();
+    mouseLocation(canvas);
+    addArrowKeyListener(rail, dir);
+    // addClickListner(fire);
     setUI(canvas);
+    spawnEnemies();
     window.requestAnimationFrame(animate);
     
 })
@@ -32,7 +37,6 @@ if(spawned == false && modelcleared == true){
     spawnEnemies(2);
 }
 const mouseLocation = (canvas) => {
-    init(canvas);
     canvas.addEventListener("mousemove", (e) => {
         let position = { x: parseInt(e.clientX ), y: parseInt(e.clientY ) }
         let axis = ships[rail].axis
@@ -71,16 +75,19 @@ const fire = (ship, dir) =>{
     let projectile =  new Projectile(ship, dir, canvas);
     entities.push(projectile);
 }
+
 const setIntervalCreator = ()=>{
-    setInterval(spawnEnemies, 2500)
+    setInterval(spawnEnemies, 20000)
 }
 
 const animate = () =>{
     var canvas = document.getElementById("myCanvas");
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
+    ui.draw()
     for(let i = 0; i < entities.length; i++){
         entities[i].draw()
     }
+    increaseScore(collsion(entities));
     requestAnimationFrame(animate)
 }
 const addArrowKeyListener = () => {
@@ -119,18 +126,53 @@ const addArrowKeyListener = () => {
         }
     });
 }
-const addClickListner = ()=>{
-    document.addEventListener("click", ()=>{
-        fire(ships[rail],dir);
-    })
+
+const checkCollision = (obj1, obj2) => {
+    let pos1 = obj1.pos
+    let pos2 = obj2.pos
+    console.log("hiiiiiii")
+    if (pos1.x >= pos2.x && pos1.x <= pos2.x + obj2.size) {
+        if (pos1.y > pos2.y && pos1.y < pos2.y + obj2.size) {
+            return true
+        }
+    } else if (pos2.x > pos1.x && pos2.x < pos1.x + obj1.size) {
+        if (pos2.y > pos1.y && pos2.y < pos1.y + obj1.size) {
+            return true
+        }
+    } 
+    return false
+}
+// if type is ship decrement health
+const collsion = (objs = entities) => {
+    for (let i = 0; i < objs.length; i++) {
+        for (let j = i + i; i < objs.length; i++) {
+            if (objs[i].type !== undefined && objs[j].type !== undefined) {
+                let coll = checkCollision(objs[i], objs[j])
+                if (coll) {
+                    collsionType(objs[i])
+                    collsionType(objs[j])
+                    return 10;
+                }
+            }
+        }
+    }
+    return 0;
+}
+const collsionType = (obj) =>{
+    if (obj.type === "enemy" || obj.type === "playerProjectile"){
+        obj.dontDraw = true;
+    }
+    if (obj.type == "ship"){
+        health -= 10;
+    }
 }
 
 const setUI = (canvas) =>{
     ui = new UI(score, health, canvas);
-    entities.push(ui)
 }
 
 const increaseScore = (points) =>{
+    // console.log("adding points!!!")
     score += points
     ui.score = score;
 }
