@@ -6,7 +6,7 @@ export default class Projectile{
         this.ctx = canvas.getContext("2d")
         this.size = 10;
         this.color = ship.color;
-        this.additive = Math.random() * 1.5;
+        this.additive = Math.random() * 3;
         this.dontDraw = false;
         this.type = "playerProjectile"
     }
@@ -16,8 +16,8 @@ export default class Projectile{
             let direction = this.movePos();
             this.ctx.beginPath();
             this.ctx.arc(
-                direction.x + (50 / 2) ,
-                direction.y + (50 / 2) ,
+                direction.x ,
+                direction.y ,
                 this.size,
                 0,
                 2 * Math.PI

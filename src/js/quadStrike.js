@@ -2,6 +2,7 @@ import Ship from './util/ship';
 import UI from './util/uI'
 import Projectile from './util/projectile'
 import EnemySpawner from './util/spawnEnemy'
+import { DeathEffect, StarEffect } from './util/effects'
 // import collsion from './util/collsion'
 // import {addClickListner} from './util/listners'
 // import { addArrowKeyListener, mouseLocation } from './util/eventUtil'
@@ -11,31 +12,35 @@ let enemySpawner = null;
 let modelcleared = false;
 let ships = [];
 let entities = [];
+let effects  = [];
 let health = 100;
 let rail = 0;
 let score = 0; 
 let ui = null;
 let dir = "down"
 let colors = ["#4deeea", "#74ee15", "#ffe700", "#f000ff"]
-let spawned = false;
 
 window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById("myCanvas");
+    canvas.addEventListener("click", fire.bind(this))
     init(canvas)
     enemySpawner = new EnemySpawner(canvas, colors)
     displayModel();
-    setIntervalCreator();
     mouseLocation(canvas);
     addArrowKeyListener(rail, dir);
-    // addClickListner(fire);
     setUI(canvas);
-    spawnEnemies();
+    spawnStars(canvas);
     window.requestAnimationFrame(animate);
-    
+    spawnEnemies();
 })
-if(spawned == false && modelcleared == true){
-    spawnEnemies(2);
+const spawnStars = (canvas)=>{
+    for(let i = 0; i < 20; i++){
+        let star = new StarEffect(canvas)
+        effects.push(star)
+    }
+
 }
+
 const mouseLocation = (canvas) => {
     canvas.addEventListener("mousemove", (e) => {
         let position = { x: parseInt(e.clientX ), y: parseInt(e.clientY ) }
@@ -70,24 +75,29 @@ const init = (canvas) => {
     }
 }
 
-const fire = (ship, dir) =>{
+const fire = () =>{
+    
     let canvas = document.getElementById("myCanvas");
-    let projectile =  new Projectile(ship, dir, canvas);
+    let projectile =  new Projectile(ships[rail], dir, canvas);
     entities.push(projectile);
 }
 
-const setIntervalCreator = ()=>{
-    setInterval(spawnEnemies, 20000)
-}
 
 const animate = () =>{
     var canvas = document.getElementById("myCanvas");
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
     ui.draw()
     for(let i = 0; i < entities.length; i++){
-        entities[i].draw()
+        if (entities[i] !== undefined) {
+            entities[i].draw()
+        }
     }
-    increaseScore(collsion(entities));
+    for(let i = 0; i < effects.length; i++){
+        if(effects[i] !== undefined){
+            effects[i].draw()
+        }
+    }
+    collsion(entities);
     requestAnimationFrame(animate)
 }
 const addArrowKeyListener = () => {
@@ -114,55 +124,127 @@ const addArrowKeyListener = () => {
                 dir = "left";
                 break;
             case 32:
-                fire(ships[rail], dir);
+                fire();
                 break;
             case 81:
                 if (modelcleared == false) { 
-                     clearModel();
-                     modelcleared = true; 
-                     spawned = true;
+                    setInterval(spawnEnemies, 10000)
+                    clearModel();
+                    modelcleared = true; 
                 }
                 break;
         }
     });
 }
 
+let obj1left = null
+let obj1right = null
+let obj1top = null
+let obj1bottom = null
+let obj2left = null
+let obj2right = null
+let obj2top = null
+let obj2bottom = null
+
 const checkCollision = (obj1, obj2) => {
-    let pos1 = obj1.pos
-    let pos2 = obj2.pos
-    console.log("hiiiiiii")
-    if (pos1.x >= pos2.x && pos1.x <= pos2.x + obj2.size) {
-        if (pos1.y > pos2.y && pos1.y < pos2.y + obj2.size) {
+    obj1left = obj1.pos.x; 
+    obj1right = obj1.pos.x + obj1.size; 
+    obj1top = obj1.pos.y;
+    obj1bottom = obj1.pos.y + obj1.size;
+    obj2left = obj2.pos.x; 
+    obj2right = obj2.pos.x + obj2.size; 
+    obj2top = obj2.pos.y;
+    obj2bottom = obj2.pos.y + obj2.size;
+    // if (obj1.type === "enemy" || obj1.type === "playerProjectile" ){
+    //     obj1left = obj1.pos.x - obj1.size;
+    //     obj1right = obj1.pos.x + (obj1.size * 2);
+    //     obj1top = obj1.pos.y - obj1.size;
+    //     obj1bottom = obj1.pos.y + (obj1.size * 2);
+    // }
+    // if (obj2.type === "enemy" || obj2.type === "playerProjectile") {
+    //     obj2left = obj2.pos.x - obj2.size;
+    //     obj2right = obj2.pos.x + (obj2.size * 2);
+    //     obj2top = obj2.pos.y - obj2.size;
+    //     obj2bottom = obj2.pos.y + (obj2.size * 2);
+    // }
+    
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+
+    // ctx.beginPath();
+    // ctx.rect(obj1.pos.x - obj1.size, obj1.pos.y - obj1.size, obj1.size * 1.8, obj1.size * 1.8);
+    // ctx.fillStyle = "red";
+    // ctx.fill();
+    // ctx.closePath();
+
+    // ctx.beginPath();
+    // ctx.rect(obj2.pos.x, obj2.pos.y, obj2.size, obj2.size);
+    // ctx.fillStyle = "red";
+    // ctx.fill();
+    // ctx.closePath();
+
+    if(obj2left >= obj1left && obj2left <= obj1right){
+        if(obj2top >= obj1top && obj2top <= obj1bottom){
+                
             return true
         }
-    } else if (pos2.x > pos1.x && pos2.x < pos1.x + obj1.size) {
-        if (pos2.y > pos1.y && pos2.y < pos1.y + obj1.size) {
+    } else if (obj2right >= obj1left && obj2right <= obj1right){
+        if(obj2bottom <= obj1bottom && obj2bottom >= obj1top){
             return true
         }
-    } 
+    }
     return false
 }
-// if type is ship decrement health
+
 const collsion = (objs = entities) => {
     for (let i = 0; i < objs.length; i++) {
-        for (let j = i + i; i < objs.length; i++) {
-            if (objs[i].type !== undefined && objs[j].type !== undefined) {
-                let coll = checkCollision(objs[i], objs[j])
-                if (coll) {
-                    collsionType(objs[i])
-                    collsionType(objs[j])
-                    return 10;
+        for (let j = i + 1; j < objs.length - 1; j++) {
+            if(objs[i] !== undefined && objs[j] !== undefined){
+                if (objs[i].type !== undefined && objs[j].type !== undefined) {
+                    if (checkCollision(objs[i], objs[j])) {
+                        collsionType(objs[i], objs[j], i, j)
+                    }
                 }
             }
         }
     }
-    return 0;
 }
-const collsionType = (obj) =>{
-    if (obj.type === "enemy" || obj.type === "playerProjectile"){
-        obj.dontDraw = true;
-    }
-    if (obj.type == "ship"){
+const collsionType = (obj1, obj2, i, j) =>{
+    let canvas = document.getElementById("myCanvas");
+    if (obj1.type === "enemy" && obj2.type === "playerProjectile" || obj2.type === "enemy" && obj1.type === "playerProjectile"){
+        if(obj1.color === obj2.color){
+            obj1.dontDraw = true;
+            obj2.dontDraw = true;
+            delete entities[i]
+            delete entities[j]
+            score += 10;
+            ui.score = score
+        }else{
+            if (obj1.type === "enemy"){
+                if (obj1.maxSize < 100){
+                    obj1.maxSize += 5
+                }
+                if (obj2.type === "playerProjectile"){
+                    delete entities[j]
+                }
+            }else if(obj2.type === "enemy"){
+                if (obj1.maxSize < 100) {
+                    obj2.maxSize += 5
+                }
+                if (obj1.type === "playerProjectile") {
+                    delete entities[i]
+                }
+            }
+        }
+        if (obj1.type === "enemy"){
+            let effect = new DeathEffect(obj1.pos, obj2.color, obj1.size, canvas)
+            effects.push(effect);
+        }else if(obj2.type == "enemy"){
+            let effect = new DeathEffect(obj2.pos, obj1.color, obj2.size, canvas)
+            effects.push(effect);
+        }
+    }  
+    if (obj1.type == "ship" || obj2.type == "ship" ){
         health -= 10;
     }
 }
@@ -171,11 +253,6 @@ const setUI = (canvas) =>{
     ui = new UI(score, health, canvas);
 }
 
-const increaseScore = (points) =>{
-    // console.log("adding points!!!")
-    score += points
-    ui.score = score;
-}
 const DecreaseHealth = (ammount) =>{
     health -= ammount 
     ui.health = health;
