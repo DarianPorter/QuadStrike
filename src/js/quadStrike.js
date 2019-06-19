@@ -6,23 +6,26 @@ import { DeathEffect, StarEffect } from './util/effects'
 // import collsion from './util/collsion'
 // import {addClickListner} from './util/listners'
 // import { addArrowKeyListener, mouseLocation } from './util/eventUtil'
-import { displayModel, clearModel, gameOverModel, refresh} from './util/model.js'
+import { displayModel, clearModel, gameOverModel} from './util/model.js'
 
 let enemySpawner = null;
 let modelcleared = false;
+let checked = false;
 let ships = [];
 let entities = [];
 let effects  = [];
-let health = 100;
+let time = 100;
 let rail = 0;
 let score = 0; 
+let kills = 0;
+let enemyCount = 1;
 let ui = null;
 let dir = "down"
 let colors = ["#4deeea", "#74ee15", "#ffe700", "#f000ff"]
 
 window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById("myCanvas");
-    canvas.addEventListener("click", fire.bind(this))
+    document.addEventListener("click", fire.bind(this))
     init(canvas)
     enemySpawner = new EnemySpawner(canvas, colors)
     displayModel();
@@ -31,18 +34,17 @@ window.addEventListener('DOMContentLoaded', () => {
     setUI(canvas);
     spawnStars(canvas);
     window.requestAnimationFrame(animate);
-    spawnEnemies();
+    spawnEnemies(enemyCount);
 })
 const spawnStars = (canvas)=>{
     for(let i = 0; i < 20; i++){
         let star = new StarEffect(canvas)
         effects.push(star)
     }
-
 }
 
 const mouseLocation = (canvas) => {
-    canvas.addEventListener("mousemove", (e) => {
+    document.addEventListener("mousemove", (e) => {
         let position = { x: parseInt(e.clientX ), y: parseInt(e.clientY ) }
         let axis = ships[rail].axis
         ships[rail].pos[axis] = position[axis];
@@ -128,7 +130,19 @@ const addArrowKeyListener = () => {
                 break;
             case 81:
                 if (modelcleared == false) { 
-                    setInterval(spawnEnemies, 10000)
+                    setInterval(()=>{
+                        DecreaseTime(1)
+                        if (time <= 0 && checked == false){
+                            window.alert(`Game Over! \nyou scored ${score} Points!`)
+                            location.reload();
+                            checked = true
+                        }
+                        if(kills == enemyCount){
+                            enemyCount *= 2;
+                            spawnEnemies(enemyCount)
+                            kills = 0
+                        }
+                    }, 1000)
                     clearModel();
                     modelcleared = true; 
                 }
@@ -213,6 +227,7 @@ const collsionType = (obj1, obj2, i, j) =>{
     let canvas = document.getElementById("myCanvas");
     if (obj1.type === "enemy" && obj2.type === "playerProjectile" || obj2.type === "enemy" && obj1.type === "playerProjectile"){
         if(obj1.color === obj2.color){
+            kills+=1;
             obj1.dontDraw = true;
             obj2.dontDraw = true;
             delete entities[i]
@@ -222,6 +237,7 @@ const collsionType = (obj1, obj2, i, j) =>{
         }else{
             if (obj1.type === "enemy"){
                 if (obj1.maxSize < 100){
+                    DecreaseTime(2)
                     obj1.maxSize += 5
                 }
                 if (obj2.type === "playerProjectile"){
@@ -229,6 +245,7 @@ const collsionType = (obj1, obj2, i, j) =>{
                 }
             }else if(obj2.type === "enemy"){
                 if (obj1.maxSize < 100) {
+                    DecreaseTime(2)
                     obj2.maxSize += 5
                 }
                 if (obj1.type === "playerProjectile") {
@@ -244,18 +261,15 @@ const collsionType = (obj1, obj2, i, j) =>{
             effects.push(effect);
         }
     }  
-    if (obj1.type == "ship" || obj2.type == "ship" ){
-        health -= 10;
-    }
 }
 
 const setUI = (canvas) =>{
-    ui = new UI(score, health, canvas);
+    ui = new UI(score, time, canvas);
 }
 
-const DecreaseHealth = (ammount) =>{
-    health -= ammount 
-    ui.health = health;
+const DecreaseTime = (ammount) =>{
+    time -= ammount 
+    ui.time = time;
 }
 
 const spawnEnemies = (ammount = 1) =>{

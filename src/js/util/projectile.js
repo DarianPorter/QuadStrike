@@ -6,7 +6,7 @@ export default class Projectile{
         this.ctx = canvas.getContext("2d")
         this.size = 10;
         this.color = ship.color;
-        this.additive = Math.random() * 3;
+        this.additive = Math.random() * 5;
         this.dontDraw = false;
         this.type = "playerProjectile"
     }
@@ -36,23 +36,23 @@ export default class Projectile{
         switch(this.dir){
             case "left":
                 return { 
-                    x: this.pos.x - (6 + this.additive) , 
+                    x: this.pos.x - (7 + this.additive) , 
                     y: this.pos.y
                 };
             case "right":
                 return {
-                    x: this.pos.x + (6 + this.additive),
+                    x: this.pos.x + (7 + this.additive),
                     y: this.pos.y
                 };
             case "up":
                 return {
                     x: this.pos.x ,
-                    y: this.pos.y - (6 + this.additive)
+                    y: this.pos.y - (7 + this.additive)
                 };
             case "down":
                 return {
                     x: this.pos.x ,
-                    y: this.pos.y + (6 + this.additive)
+                    y: this.pos.y + (7 + this.additive)
                 };
             default:
                 console.log("whahatttt tfff")

@@ -30,7 +30,3 @@ export const clearModel = ()=>{
 export const gameOverModal = ()=>{
     window.alert("ahhhhhhhhh")
 } 
-
-export const refresh=()=>{
-    location.reload();
-}
