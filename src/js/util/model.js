@@ -4,8 +4,8 @@ export const displayModel = ()=>{
     model.setAttribute("id", "model")
     model.style.position = "absolute"
     model.style.background = "rgba(0,0,0,.95)"
-    model.style.width = "100vw"
-    model.style.height = "100vh"
+    model.style.width = window.innerWidth
+    model.style.height = window.innerHeight * 2
     model.style.display = "flex"
     model.style.alignItems = "center"
     model.style.top = "0px"
