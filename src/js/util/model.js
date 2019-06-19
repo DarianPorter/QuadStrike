@@ -3,7 +3,7 @@ export const displayModel = ()=>{
     document.body.appendChild(model)
     model.setAttribute("id", "model")
     model.style.position = "absolute"
-    model.style.background = "rgba(0,0,0,.85)"
+    model.style.background = "rgba(0,0,0,.95)"
     model.style.width = "100vw"
     model.style.height = "100vh"
     model.style.display = "flex"
@@ -15,10 +15,10 @@ export const displayModel = ()=>{
     instructions.style.fontSize = "30px"
     instructions.style.textAlign = "center"
     instructions.style.verticalAlign = "middle"
-    instructions.style.width = "500px"
+    instructions.style.width = "650px"
     instructions.style.margin = "auto"
     instructions.style.height = "50%"
-    instructions.innerHTML = "Instructions: <br/> ------------------------ <br> WASD changes controll of each ship <br/> space or mouse click fires <br/> use the mouse to move your ship <br/> match the color of your ship to te enemy to destroy the enemy <br/> and dont let your health reach 0%! <br/> ----------------- <br/> press Q to start"
+    instructions.innerHTML = "Instructions: <br/> ------------------------ <br> * WASD changes control of each ship <br/> * Space or mouse click fires <br/> * Use the mouse to move your selected ship <br/> * Match the color of your ship to the enemy to destroy the enemy <br/> * Game is over when time hits 0! <br/> ----------------- <br/> Press Q to start"
     model.appendChild(instructions)
 }
 

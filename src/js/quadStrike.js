@@ -14,7 +14,7 @@ let checked = false;
 let ships = [];
 let entities = [];
 let effects  = [];
-let time = 100;
+let time = 90;
 let rail = 0;
 let score = 0; 
 let kills = 0;
@@ -43,9 +43,9 @@ const spawnStars = (canvas)=>{
     }
 }
 
-const mouseLocation = (canvas) => {
+const mouseLocation = () => {
     document.addEventListener("mousemove", (e) => {
-        let position = { x: parseInt(e.clientX ), y: parseInt(e.clientY ) }
+        let position = { x: parseInt(e.clientX), y: parseInt(e.clientY) }
         let axis = ships[rail].axis
         ships[rail].pos[axis] = position[axis];
     })
@@ -169,30 +169,35 @@ const checkCollision = (obj1, obj2) => {
     obj2right = obj2.pos.x + obj2.size; 
     obj2top = obj2.pos.y;
     obj2bottom = obj2.pos.y + obj2.size;
-    // if (obj1.type === "enemy" || obj1.type === "playerProjectile" ){
-    //     obj1left = obj1.pos.x - obj1.size;
-    //     obj1right = obj1.pos.x + (obj1.size * 2);
-    //     obj1top = obj1.pos.y - obj1.size;
-    //     obj1bottom = obj1.pos.y + (obj1.size * 2);
-    // }
-    // if (obj2.type === "enemy" || obj2.type === "playerProjectile") {
-    //     obj2left = obj2.pos.x - obj2.size;
-    //     obj2right = obj2.pos.x + (obj2.size * 2);
-    //     obj2top = obj2.pos.y - obj2.size;
-    //     obj2bottom = obj2.pos.y + (obj2.size * 2);
-    // }
+    if (obj1.type === "enemy" || obj1.type === "playerProjectile" ){
+        obj1left = obj1.pos.x - obj1.size;
+        obj1right = obj1.pos.x + (obj1.size);
+        obj1top = obj1.pos.y - obj1.size;
+        obj1bottom = obj1.pos.y + (obj1.size);
+    }
+    if (obj2.type === "enemy" || obj2.type === "playerProjectile") {
+        obj2left = obj2.pos.x - obj2.size;
+        obj2right = obj2.pos.x + (obj2.size);
+        obj2top = obj2.pos.y - obj2.size;
+        obj2bottom = obj2.pos.y + (obj2.size);
+    }
     
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
 
     // ctx.beginPath();
-    // ctx.rect(obj1.pos.x - obj1.size, obj1.pos.y - obj1.size, obj1.size * 1.8, obj1.size * 1.8);
+    // ctx.rect(obj1.pos.x - obj1.size, obj1.pos.y - obj1.size, obj1.size, obj1.size );
     // ctx.fillStyle = "red";
     // ctx.fill();
     // ctx.closePath();
 
     // ctx.beginPath();
     // ctx.rect(obj2.pos.x, obj2.pos.y, obj2.size, obj2.size);
+    // ctx.fillStyle = "red";
+    // ctx.fill();
+    // ctx.closePath();
+    // ctx.beginPath();
+    // ctx.rect(obj1.pos.x, obj1.pos.y, obj1.size, obj1.size);
     // ctx.fillStyle = "red";
     // ctx.fill();
     // ctx.closePath();
@@ -212,7 +217,7 @@ const checkCollision = (obj1, obj2) => {
 
 const collsion = (objs = entities) => {
     for (let i = 0; i < objs.length; i++) {
-        for (let j = i + 1; j < objs.length - 1; j++) {
+        for (let j = i + 1; j < objs.length; j++) {
             if(objs[i] !== undefined && objs[j] !== undefined){
                 if (objs[i].type !== undefined && objs[j].type !== undefined) {
                     if (checkCollision(objs[i], objs[j])) {
@@ -276,4 +281,5 @@ const spawnEnemies = (ammount = 1) =>{
     enemySpawner.spawn(ammount).forEach(enemy => {
         entities.push(enemy)
     });
+    DecreaseTime(-10)
 }
