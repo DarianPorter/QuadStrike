@@ -15,9 +15,9 @@ export const displayModel = ()=>{
     instructions.style.fontSize = "30px"
     instructions.style.textAlign = "center"
     instructions.style.verticalAlign = "middle"
-    instructions.style.width = "650px"
+    instructions.style.width = "100vw"
     instructions.style.margin = "auto"
-    instructions.style.height = "50%"
+    instructions.style.height = "100vh"
     instructions.innerHTML = "Instructions: <br/> ------------------------ <br> * WASD changes control of each ship <br/> * Space or mouse click fires <br/> * Use the mouse to move your selected ship <br/> * Match the color of your ship to the enemy to destroy the enemy <br/> * Game is over when time hits 0! <br/> ----------------- <br/> Press Q to start"
     model.appendChild(instructions)
 }

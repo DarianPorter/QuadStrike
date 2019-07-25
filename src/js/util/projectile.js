@@ -2,6 +2,7 @@ export default class Projectile{
     constructor(ship, dir, canvas){
         this.pos = ship.pos;
         this.dir = dir;
+        this.pos = this.offSet(ship.size);
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d")
         this.size = 10;
@@ -24,8 +25,9 @@ export default class Projectile{
             );
             this.ctx.shadowBlur = 20;
             this.ctx.shadowColor = this.color;
-            this.ctx.fillStyle = this.color;
-            this.ctx.fill();
+            this.ctx.lineWidth = 5;
+            this.ctx.strokeStyle = this.color;
+            this.ctx.stroke();
             this.ctx.closePath();
             this.pos = direction;
         }
@@ -53,6 +55,33 @@ export default class Projectile{
                 return {
                     x: this.pos.x ,
                     y: this.pos.y + (7 + this.additive)
+                };
+            default:
+                console.log("whahatttt tfff")
+                debugger
+        }
+    }
+    offSet(size){
+        switch (this.dir) {
+            case "left":
+                return {
+                    x: this.pos.x ,
+                    y: this.pos.y + size / 2
+                };
+            case "right":
+                return {
+                    x: this.pos.x,
+                    y: this.pos.y + size / 2
+                };
+            case "up":
+                return {
+                    x: this.pos.x + size / 2,
+                    y: this.pos.y 
+                };
+            case "down":
+                return {
+                    x: this.pos.x + size / 2,
+                    y: this.pos.y
                 };
             default:
                 console.log("whahatttt tfff")

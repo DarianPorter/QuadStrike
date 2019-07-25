@@ -21,12 +21,12 @@ export class DeathEffect {
 }
 export class StarEffect{
     constructor(){
-        let colors = ["#6f367d", "#d1a0e2", "#9f86d7", "#5a3f93"]
-        this.glowColor = colors[Math.floor(Math.random() * colors.length)]
+        // let colors = ["red", "blue", "purple", "white"]
+        this.glowColor = "white"
         this.canvas = document.getElementById("myCanvas");
         this.ctx = this.canvas.getContext("2d");
-        this.maxSize = Math.floor(Math.random() * 10) + 10
-        this.minSize =  10;
+        this.maxSize = Math.floor(Math.random() * 7) + 7
+        this.minSize =  7;
         this.size = this.minSize;
         this.shrink = false
         this.pos = this.getRandomPos();
@@ -35,12 +35,12 @@ export class StarEffect{
     draw(){
         this.ctx.beginPath()
         if(this.size < this.maxSize && this.shrink == false){
-            this.ctx.arc(this.pos.x, this.pos.y, this.size += .1, 0, 2 * Math.PI);
+            this.ctx.arc(this.pos.x, this.pos.y, this.size += .05, 0, 2 * Math.PI);
             if(this.size >= this.maxSize){
                 this.shrink = true
             }
         } else if (this.size > this.minSize && this.shrink == true) {
-            this.ctx.arc(this.pos.x, this.pos.y, this.size -= .1, 0, 2 * Math.PI);
+            this.ctx.arc(this.pos.x, this.pos.y, this.size -= .05, 0, 2 * Math.PI);
             if (this.size <= this.minSize) {
                 this.shrink = false
             }
