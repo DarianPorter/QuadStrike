@@ -1,14 +1,14 @@
+var lerp = require('lerp')
 import Ship from './util/ship';
 import UI from './util/uI'
 import Projectile from './util/projectile'
 import EnemySpawner from './util/spawnEnemy'
 import { DeathEffect, StarEffect } from './util/effects'
-// import collsion from './util/collsion'
-// import {addClickListner} from './util/listners'
-// import { addArrowKeyListener, mouseLocation } from './util/eventUtil'
-import { displayModel, clearModel, gameOverModel} from './util/model.js'
+import Ind from './util/arrowInd'
+import { displayModel, clearModel} from './util/model'
 
 let enemySpawner = null;
+let ind = null;
 let modelcleared = false;
 let checked = false;
 let ships = [];
@@ -22,6 +22,7 @@ let enemyCount = 1;
 let ui = null;
 let dir = "down"
 let colors = ["#4deeea", "#74ee15", "#ffe700", "#f000ff"]
+let e = null
 
 window.addEventListener('DOMContentLoaded', () => {
     let canvas = document.getElementById("myCanvas");
@@ -29,10 +30,11 @@ window.addEventListener('DOMContentLoaded', () => {
     init(canvas)
     enemySpawner = new EnemySpawner(canvas, colors)
     displayModel();
-    mouseLocation(canvas);
+    mouseLocation();
     addArrowKeyListener(rail, dir);
     setUI(canvas);
     spawnStars(canvas);
+    ind = new Ind();
     window.requestAnimationFrame(animate);
     spawnEnemies(enemyCount);
 })
@@ -44,10 +46,8 @@ const spawnStars = (canvas)=>{
 }
 
 const mouseLocation = () => {
-    document.addEventListener("mousemove", (e) => {
-        let position = { x: parseInt(e.clientX), y: parseInt(e.clientY) }
-        let axis = ships[rail].axis
-        ships[rail].pos[axis] = position[axis];
+    document.addEventListener("mousemove", (event) => {
+        e = event
     })
 }
 const init = (canvas) => {
@@ -89,6 +89,14 @@ const animate = () =>{
     var canvas = document.getElementById("myCanvas");
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height)
     ui.draw()
+    if( e !== null){
+        let axis = ships[rail].axis
+        let position = {
+            x: lerp(ships[rail].pos[axis], parseInt(e.clientX), .1),
+            y: lerp(ships[rail].pos[axis], parseInt(e.clientY), .1)
+        }
+        ships[rail].pos[axis] = position[axis];
+    }
     for(let i = 0; i < entities.length; i++){
         if (entities[i] !== undefined) {
             entities[i].draw()
@@ -109,21 +117,25 @@ const addArrowKeyListener = () => {
             case 38:
                 rail = "0";
                 dir = "down";
+                ind.changeStyleWithException(1);
                 break;
             case 83:
             case 40:
                 rail = "1";
                 dir = "up";
+                ind.changeStyleWithException(2);
                 break;
             case 65:
             case 37:
                 rail = "2";
                 dir = "right";
+                ind.changeStyleWithException(0);
                 break;
             case 68:
             case 39:
                 rail = "3";
                 dir = "left";
+                ind.changeStyleWithException(3);
                 break;
             case 32:
                 fire();
@@ -135,12 +147,12 @@ const addArrowKeyListener = () => {
                         if (time <= 0 && checked == false){
                             window.alert(`Game Over! \nyou scored ${score} Points!`)
                             location.reload();
-                            checked = true
+                            checked = true;
                         }
                         if(kills == enemyCount){
                             enemyCount *= 2;
-                            spawnEnemies(enemyCount)
-                            kills = 0
+                            spawnEnemies(enemyCount);
+                            kills = 0;
                         }
                     }, 1000)
                     clearModel();
@@ -184,23 +196,6 @@ const checkCollision = (obj1, obj2) => {
     
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
-
-    // ctx.beginPath();
-    // ctx.rect(obj1.pos.x - obj1.size, obj1.pos.y - obj1.size, obj1.size, obj1.size );
-    // ctx.fillStyle = "red";
-    // ctx.fill();
-    // ctx.closePath();
-
-    // ctx.beginPath();
-    // ctx.rect(obj2.pos.x, obj2.pos.y, obj2.size, obj2.size);
-    // ctx.fillStyle = "red";
-    // ctx.fill();
-    // ctx.closePath();
-    // ctx.beginPath();
-    // ctx.rect(obj1.pos.x, obj1.pos.y, obj1.size, obj1.size);
-    // ctx.fillStyle = "red";
-    // ctx.fill();
-    // ctx.closePath();
 
     if(obj2left >= obj1left && obj2left <= obj1right){
         if(obj2top >= obj1top && obj2top <= obj1bottom){

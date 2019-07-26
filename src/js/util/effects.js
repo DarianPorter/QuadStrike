@@ -22,7 +22,7 @@ export class DeathEffect {
 export class StarEffect{
     constructor(){
         // let colors = ["red", "blue", "purple", "white"]
-        this.glowColor = "white"
+        this.glowColor = ""
         this.canvas = document.getElementById("myCanvas");
         this.ctx = this.canvas.getContext("2d");
         this.maxSize = Math.floor(Math.random() * 7) + 7

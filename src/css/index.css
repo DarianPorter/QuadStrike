@@ -12,10 +12,29 @@ p {
 }
 
 #ui-panel{
+    display: flex;
     width: 20%;
     height: inherit;
     border: white 3px solid;
     margin-left: 20px;
+}
+#buttons{
+    display: flex;
+    align-items:flex-end;
+    margin: 0 auto;
+}
+
+#middle{
+    text-align: center;
+    width: 100px;
+}
+#left{
+    padding-bottom: 70px;
+    padding-right: 10px;
+}
+#right{
+    margin-bottom: 70px;
+    padding-left: 10px; 
 }
 
 #myCanvas{
@@ -48,6 +67,10 @@ p {
 #main {
     margin: auto;
     width: fit-content;
+}
+.fa{
+    font-size: 120px;
+    color: white;
 }
 
 body{
