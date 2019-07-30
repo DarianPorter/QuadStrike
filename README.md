@@ -40,3 +40,7 @@
 ** effects.js 
 ** collision.js
 ** arrowInd.js
+
+*Implementation
+    ## Collision
+    ** The Implementation of Collision involves storing all drawable entities in an array that would be then itterated over by the collsion function. Each instance of a game object has a type as some gameobjects still need to be drawn but dosnt need to detect collision such as the stars or ui text, and things like the enemy projecties and enemy ships shouldnt be colliding with each other. after the colosion function checks the type attribute on the game objects class to determine weather it should detect collision or not, it passes the two gameobjects that are being compared to the checkCollision function.
