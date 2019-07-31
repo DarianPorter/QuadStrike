@@ -21,7 +21,8 @@ score and countdown timer visible
 add effects, stars resizing, linearly interpolate ship movement, enemies	 resizing effect, and ship color display.
 
 ## Wireframe
-![alt text](https://github.com/DarianPorter/QuadStrike/tree/master/assets/readme_imgs/wireframe.jpg)
+
+![wireframe](https://github.com/DarianPorter/QuadStrike/blob/master/assets/readme_imgs/wireframe.jpg?raw=true)
 
 * At the start of the game there will be an overlay with all of the game instructions
 * Later, when the player clears the instructions, the game will consist of 2 rectangles, a large one containing the canvas all the game objects that will be drawn, and a smaller one containing the indicators that shows which ship is selected 
@@ -48,3 +49,5 @@ add effects, stars resizing, linearly interpolate ship movement, enemies	 resizi
 ## Implementation
 ### Collision
    * The Implementation of Collision involves storing all drawable entities in an array that would be then itterated over by the collsion function. Each instance of a game object has a type as some gameobjects still need to be drawn but dosnt need to detect collision such as the stars or ui text, and things like the enemy projecties and enemy ships shouldnt be colliding with each other. after the colosion function checks the type attribute on the game objects class to determine weather it should detect collision or not, it passes the two gameobjects that are being compared to the checkCollision function.
+
+![clollision code](https://github.com/DarianPorter/QuadStrike/blob/master/assets/readme_imgs/collision_code.jpg?raw=true)
