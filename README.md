@@ -4,10 +4,10 @@ A game where the player controls four ships *represented as squares* taking down
 
 ## Background and Overview
 #### Motivation for project
-    The motivation behind this project is that before App Academy I use to make games with the Gaming Engine unity, its been a while since I’ve sat down with a new project but I’m curious to translate my game design experience into pure javascript for my logic and html canvas for my visuals.
+The motivation behind this project is that before App Academy I use to make games with the Gaming Engine unity, its been a while since I’ve sat down with a new project but I’m curious to translate my game design experience into pure javascript for my logic and html canvas for my visuals.
 
 #### High level overview
-    The game will be spin on asteroids where your responsible for controlling 4 ships instead of 1.
+The game will be spin on asteroids where your responsible for controlling 4 ships instead of 1.
 
 ## Features and MVPs
 * all ships track mouse movment when selected
